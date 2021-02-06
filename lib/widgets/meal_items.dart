@@ -127,27 +127,36 @@ class _MealItemState extends State<MealItem> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.alarm_on_outlined),
+                      Icon(
+                        Icons.alarm_on_outlined,
+                        color: Theme.of(context).buttonColor,
+                      ),
                       SizedBox(width: 6),
                       Text("${widget.duration} min", style: textStyle),
                     ],
                   ),
                   Row(
                     children: [
-                      Icon(Icons.work),
+                      Icon(
+                        Icons.work,
+                        color: Theme.of(context).buttonColor,
+                      ),
                       SizedBox(width: 6),
                       Text("$complexityText", style: textStyle),
                     ],
                   ),
                   Row(
                     children: [
-                      Icon(Icons.attach_money),
+                      Icon(
+                        Icons.attach_money,
+                        color: Theme.of(context).buttonColor,
+                      ),
                       SizedBox(width: 6),
                       Text("$affordabilityText", style: textStyle),
                     ],

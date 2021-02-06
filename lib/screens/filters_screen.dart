@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meal_app/providers/meal_provider.dart';
+import 'package:meal_app/providers/theme_provider.dart';
 import 'package:meal_app/screens/main_drawer_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +29,11 @@ class _FiltersScreenState extends State<FiltersScreen> {
       ),
       value: currentValue,
       onChanged: updateValue,
+      inactiveTrackColor:
+          Provider.of<ThemeProvider>(context, listen: true).tm ==
+                  ThemeMode.light
+              ? null
+              : Colors.black87,
     );
   }
 

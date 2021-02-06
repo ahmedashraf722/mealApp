@@ -99,6 +99,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        elevation: 0,
         key: _formKey,
         onPressed: () {
           setState(() {
@@ -111,7 +112,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
         child: Icon(Provider.of<MealProvider>(
           context,
           listen: true,
-        ).isMealFavourite(mealId)
+        ).isFavourite(mealId)
             ? Icons.star
             : Icons.star_border_outlined),
       ),

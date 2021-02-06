@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:meal_app/models/meal.dart';
+import 'package:meal_app/providers/meal_provider.dart';
+import 'package:meal_app/providers/theme_provider.dart';
 import 'package:meal_app/screens/categories_screens.dart';
 import 'package:meal_app/screens/favourite_screen.dart';
 import 'package:meal_app/screens/main_drawer_screen.dart';
+import 'package:provider/provider.dart';
 
 class TabsScreen extends StatefulWidget {
   @override
@@ -16,6 +18,18 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   void initState() {
+    Provider.of<MealProvider>(
+      context,
+      listen: false,
+    ).getData();
+    Provider.of<ThemeProvider>(
+      context,
+      listen: false,
+    ).getThemeMode();
+    Provider.of<ThemeProvider>(
+      context,
+      listen: false,
+    ).getThemeColors();
     _pages = [
       {
         'page': CategoriesScreens(),
