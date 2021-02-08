@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/providers/language_provider.dart';
 import 'package:meal_app/providers/meal_provider.dart';
 import 'package:meal_app/providers/theme_provider.dart';
 import 'package:meal_app/screens/categories_meal_screens.dart';
@@ -23,6 +24,9 @@ void main() {
         ChangeNotifierProvider<ThemeProvider>(
           create: (_) => ThemeProvider(),
         ),
+        ChangeNotifierProvider<LanguageProvider>(
+          create: (_) => LanguageProvider(),
+        ),
       ],
       child: MyApp(),
     ),
@@ -33,8 +37,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tm = Provider.of<ThemeProvider>(context, listen: true).tm;
-    var primaryColor = Provider.of<ThemeProvider>(context, listen: true).primaryColor;
-    var  accentColor = Provider.of<ThemeProvider>(context, listen: true).accentColor;
+    var primaryColor =
+        Provider.of<ThemeProvider>(context, listen: true).primaryColor;
+    var accentColor =
+        Provider.of<ThemeProvider>(context, listen: true).accentColor;
     return MaterialApp(
       themeMode: tm,
       theme: ThemeData(

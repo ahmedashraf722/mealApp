@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/providers/language_provider.dart';
 import 'package:meal_app/providers/meal_provider.dart';
 import 'package:meal_app/providers/theme_provider.dart';
 import 'package:meal_app/screens/main_drawer_screen.dart';
@@ -39,20 +40,21 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var lan = Provider.of<LanguageProvider>(context, listen: true);
     final Map<String, bool> currentFilters = Provider.of<MealProvider>(
       context,
       listen: true,
     ).filters;
     return Scaffold(
       appBar: AppBar(
-        title: Text(" Your Filters"),
+        title: Text(lan.getTexts('filters_appBar_title')),
       ),
       body: Column(
         children: [
           Container(
             padding: EdgeInsets.all(20),
             child: Text(
-              'Adjust your meal Selection.',
+              lan.getTexts('filters_screen_title'),
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
@@ -60,8 +62,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
             child: ListView(
               children: [
                 buildSwitchListTile(
-                  "Gluten-free",
-                  "Only include gluten-free meals",
+                 lan.getTexts('Gluten-free'),
+                  lan.getTexts('Gluten-free-sub'),
                   currentFilters['gluten'],
                   (newValue) {
                     setState(() {
@@ -74,8 +76,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   },
                 ),
                 buildSwitchListTile(
-                  "Lactose-Free",
-                  "Only include Lactose-Free meals",
+                  lan.getTexts('Lactose-free'),
+                  lan.getTexts('Lactose-free_sub'),
                   currentFilters['lactose'],
                   (newValue) {
                     setState(() {
@@ -88,8 +90,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   },
                 ),
                 buildSwitchListTile(
-                  "Vegetarian",
-                  "Only include vegetarian meals",
+                  lan.getTexts('Vegetarian'),
+                  lan.getTexts('Vegetarian-sub'),
                   currentFilters['vegetarian'],
                   (newValue) {
                     setState(() {
@@ -102,8 +104,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   },
                 ),
                 buildSwitchListTile(
-                  "Vegan",
-                  "Only include Vegan meals",
+                 lan.getTexts('Vegan'),
+                  lan.getTexts('Vegan-sub'),
                   currentFilters['vegan'],
                   (newValue) {
                     setState(() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meal_app/models/meal.dart';
+import 'package:meal_app/providers/language_provider.dart';
 import 'package:meal_app/providers/meal_provider.dart';
 import 'package:meal_app/widgets/meal_items.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,7 @@ class CategoriesMealsScreens extends StatefulWidget {
 }
 
 class _CategoriesMealsScreensState extends State<CategoriesMealsScreens> {
-  String categoryTitle;
+  String categoryId;
   List<Meal> displayMeals;
 
   @override
@@ -24,8 +25,7 @@ class _CategoriesMealsScreensState extends State<CategoriesMealsScreens> {
     ).listMeals;
     final routeArg =
         ModalRoute.of(context).settings.arguments as Map<String, String>;
-    final categoryId = routeArg['id'];
-    categoryTitle = routeArg['title'];
+    categoryId = routeArg['id'];
     displayMeals = listMeals.where((meal) {
       return meal.categories.contains(categoryId);
     }).toList();
@@ -41,25 +41,37 @@ class _CategoriesMealsScreensState extends State<CategoriesMealsScreens> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          categoryTitle,
+    var lan = Provider.of<LanguageProvider>(context, listen: true);
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    var wd = MediaQuery.of(context).size.width;
+    return Directionality(
+      textDirection: lan.isEn ? TextDirection.ltr : TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          title: Text(
+           lan.getTexts('cat-$categoryId'),
+          ),
         ),
-      ),
-      body: ListView.builder(
-        itemBuilder: (ctx, index) {
-          return MealItem(
-            id: displayMeals[index].id,
-            imageUrl: displayMeals[index].imageUrl,
-            title: displayMeals[index].title,
-            duration: displayMeals[index].duration,
-            complexity: displayMeals[index].complexity,
-            affordability: displayMeals[index].affordability,
-          );
-        },
-        itemCount: displayMeals.length,
+        body: GridView.builder(
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: wd <= 400 ? 400 : 500,
+            childAspectRatio: isLandscape ? wd / (wd * 0.80) : wd / (wd * 0.75),
+            crossAxisSpacing: 2,
+            mainAxisSpacing: 0.0,
+          ),
+          itemBuilder: (ctx, index) {
+            return MealItem(
+              id: displayMeals[index].id,
+              imageUrl: displayMeals[index].imageUrl,
+              duration: displayMeals[index].duration,
+              complexity: displayMeals[index].complexity,
+              affordability: displayMeals[index].affordability,
+            );
+          },
+          itemCount: displayMeals.length,
+        ),
       ),
     );
   }

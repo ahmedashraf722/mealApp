@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:meal_app/providers/language_provider.dart';
 import 'package:meal_app/providers/theme_provider.dart';
 import 'package:meal_app/screens/main_drawer_screen.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +35,7 @@ class _ThemesScreenState extends State<ThemesScreen> {
   }
 
   ListTile buildListTile(BuildContext ctx, txt) {
+    var lan = Provider.of<LanguageProvider>(context, listen: true);
     var primaryColor =
         Provider.of<ThemeProvider>(context, listen: true).primaryColor;
     var accentColor =
@@ -41,11 +43,12 @@ class _ThemesScreenState extends State<ThemesScreen> {
 
     return ListTile(
       title: Text(
-        'Choose your $txt Color',
+        '$txt',
         style: Theme.of(context).textTheme.headline6,
       ),
       trailing: CircleAvatar(
-        backgroundColor: txt == "primary" ? primaryColor : accentColor,
+        backgroundColor:
+            txt == lan.getTexts('primary') ? primaryColor : accentColor,
       ),
       onTap: () {
         setState(
@@ -59,14 +62,15 @@ class _ThemesScreenState extends State<ThemesScreen> {
                   contentPadding: EdgeInsets.all(0.0),
                   content: SingleChildScrollView(
                     child: ColorPicker(
-                      pickerColor: txt == "primary"
+                      pickerColor: txt == lan.getTexts('primary')
                           ? Provider.of<ThemeProvider>(context, listen: true)
                               .primaryColor
                           : Provider.of<ThemeProvider>(context, listen: true)
                               .accentColor,
                       onColorChanged: (newColor) {
                         Provider.of<ThemeProvider>(context, listen: false)
-                            .onChanged(newColor, txt == "primary" ? 1 : 2);
+                            .onChanged(newColor,
+                                txt == lan.getTexts('primary') ? 1 : 2);
                       },
                       colorPickerWidth: 300.0,
                       pickerAreaHeightPercent: 0.7,
@@ -86,16 +90,17 @@ class _ThemesScreenState extends State<ThemesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var lan = Provider.of<LanguageProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
-        title: Text(" Your Themes"),
+        title: Text(lan.getTexts('theme_appBar_title')),
       ),
       body: Column(
         children: [
           Container(
             padding: EdgeInsets.all(20),
             child: Text(
-              'Adjust your themes selection.',
+              lan.getTexts('theme_screen_title'),
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
@@ -105,30 +110,30 @@ class _ThemesScreenState extends State<ThemesScreen> {
                 Container(
                   padding: EdgeInsets.all(20),
                   child: Text(
-                    'Choose your Theme Mode :',
+                    lan.getTexts('theme_mode_title'),
                     style: Theme.of(context).textTheme.headline6,
                   ),
                 ),
                 buildRadioListTile(
                   ThemeMode.system,
-                  'System Default Theme',
+                  lan.getTexts('System_default_theme'),
                   Icons.style,
                   context,
                 ),
                 buildRadioListTile(
                   ThemeMode.light,
-                  'Light Theme',
+                  lan.getTexts('light_theme'),
                   Icons.wb_sunny_outlined,
                   context,
                 ),
                 buildRadioListTile(
                   ThemeMode.dark,
-                  'Dark Theme',
+                  lan.getTexts('dark_theme'),
                   Icons.nights_stay_sharp,
                   context,
                 ),
-                buildListTile(context, 'primary'),
-                buildListTile(context, 'accent')
+                buildListTile(context, lan.getTexts('primary')),
+                buildListTile(context, lan.getTexts('accent')),
               ],
             ),
           ),

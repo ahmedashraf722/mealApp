@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:meal_app/models/meal.dart';
+import 'package:meal_app/providers/language_provider.dart';
 import 'package:meal_app/screens/meal_details_screens.dart';
+import 'package:provider/provider.dart';
 
-class MealItem extends StatefulWidget {
+class MealItem extends StatelessWidget {
   final String id;
   final String imageUrl;
-  final String title;
   final int duration;
   final Complexity complexity;
   final Affordability affordability;
@@ -13,73 +14,33 @@ class MealItem extends StatefulWidget {
   MealItem({
     @required this.id,
     @required this.imageUrl,
-    @required this.title,
     @required this.duration,
     @required this.complexity,
     @required this.affordability,
   });
 
-  @override
-  _MealItemState createState() => _MealItemState();
-}
-
-class _MealItemState extends State<MealItem> {
-  String get complexityText {
-    switch (widget.complexity) {
-      case Complexity.Simple:
-        return 'Simple';
-        break;
-      case Complexity.Challenging:
-        return 'Challenging';
-        break;
-      case Complexity.Hard:
-        return 'Hard';
-        break;
-      default:
-        return 'normal';
-        break;
-    }
-  }
-
-  String get affordabilityText {
-    switch (widget.affordability) {
-      case Affordability.Affordable:
-        return 'Affordable';
-        break;
-      case Affordability.Pricey:
-        return 'Pricey';
-        break;
-      case Affordability.Luxurious:
-        return 'Luxurious';
-        break;
-      default:
-        return 'Simply';
-        break;
-    }
-  }
-
   void selectedMeal(BuildContext ctx) {
     WidgetsFlutterBinding.ensureInitialized();
-    Navigator.of(ctx)
-        .pushNamed(
+    Navigator.of(ctx).pushNamed(
       MealDetailsScreen.routeName,
-      arguments: widget.id,
-    )
-        .then((result) {
-      /* if (result != null) {
+      arguments: id,
+    );
+    /*.then((result) {
+       if (result != null) {
         setState(() {
          // widget.removeItem(result);
         });
-      }*/
-    });
+      }
+    });*/
   }
 
   @override
   Widget build(BuildContext context) {
+    var lan = Provider.of<LanguageProvider>(context, listen: true);
     TextStyle textStyle = TextStyle(
       fontWeight: FontWeight.bold,
       color: Theme.of(context).primaryColor,
-      fontSize: 17,
+      fontSize: 14,
     );
 
     return InkWell(
@@ -99,11 +60,14 @@ class _MealItemState extends State<MealItem> {
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15),
                   ),
-                  child: Image.network(
-                    widget.imageUrl,
-                    fit: BoxFit.cover,
-                    height: 200,
-                    width: double.infinity,
+                  child: Hero(
+                    tag: id,
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      height: 200,
+                      width: double.infinity,
+                    ),
                   ),
                 ),
                 Positioned(
@@ -114,7 +78,7 @@ class _MealItemState extends State<MealItem> {
                     color: Colors.black54,
                     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                     child: Text(
-                      widget.title,
+                      lan.getTexts('meal-$id'),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
@@ -127,7 +91,7 @@ class _MealItemState extends State<MealItem> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(5),
+              padding: const EdgeInsets.only(top: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -137,8 +101,13 @@ class _MealItemState extends State<MealItem> {
                         Icons.alarm_on_outlined,
                         color: Theme.of(context).buttonColor,
                       ),
-                      SizedBox(width: 6),
-                      Text("${widget.duration} min", style: textStyle),
+                      SizedBox(width: 4),
+                      if (duration <= 10)
+                        Text("$duration" + lan.getTexts('min2'),
+                            style: textStyle),
+                      if (duration > 10)
+                        Text("$duration" + lan.getTexts('min'),
+                            style: textStyle),
                     ],
                   ),
                   Row(
@@ -147,8 +116,8 @@ class _MealItemState extends State<MealItem> {
                         Icons.work,
                         color: Theme.of(context).buttonColor,
                       ),
-                      SizedBox(width: 6),
-                      Text("$complexityText", style: textStyle),
+                      SizedBox(width: 4),
+                      Text(lan.getTexts('$complexity'), style: textStyle),
                     ],
                   ),
                   Row(
@@ -157,8 +126,8 @@ class _MealItemState extends State<MealItem> {
                         Icons.attach_money,
                         color: Theme.of(context).buttonColor,
                       ),
-                      SizedBox(width: 6),
-                      Text("$affordabilityText", style: textStyle),
+                      SizedBox(width: 4),
+                      Text(lan.getTexts('$affordability'), style: textStyle),
                     ],
                   ),
                 ],

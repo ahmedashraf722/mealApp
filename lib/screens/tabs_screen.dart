@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal_app/providers/language_provider.dart';
 import 'package:meal_app/providers/meal_provider.dart';
 import 'package:meal_app/providers/theme_provider.dart';
 import 'package:meal_app/screens/categories_screens.dart';
@@ -30,16 +31,10 @@ class _TabsScreenState extends State<TabsScreen> {
       context,
       listen: false,
     ).getThemeColors();
-    _pages = [
-      {
-        'page': CategoriesScreens(),
-        'title': 'Categories',
-      },
-      {
-        'page': FavouriteScreen(),
-        'title': 'Your Favourites',
-      },
-    ];
+    Provider.of<LanguageProvider>(
+      context,
+      listen: false,
+    ).getLan();
     super.initState();
   }
 
@@ -51,29 +46,43 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_pages[_selectedIndexPages]['title']),
+    var lan = Provider.of<LanguageProvider>(context, listen: true);
+    _pages = [
+      {
+        'page': CategoriesScreens(),
+        'title': lan.getTexts('categories'),
+      },
+      {
+        'page': FavouriteScreen(),
+        'title': lan.getTexts('your_favorites'),
+      },
+    ];
+    return Directionality(
+      textDirection: lan.isEn ? TextDirection.ltr : TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(_pages[_selectedIndexPages]['title']),
+        ),
+        body: _pages[_selectedIndexPages]['page'],
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: _selectedPage,
+          backgroundColor: Theme.of(context).primaryColor,
+          selectedItemColor: Theme.of(context).accentColor,
+          unselectedItemColor: Colors.white,
+          currentIndex: _selectedIndexPages,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.category),
+              label: lan.getTexts('categories'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.star),
+              label: lan.getTexts('your_favorites'),
+            ),
+          ],
+        ),
+        drawer: MainDrawer(),
       ),
-      body: _pages[_selectedIndexPages]['page'],
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: _selectedPage,
-        backgroundColor: Theme.of(context).primaryColor,
-        selectedItemColor: Theme.of(context).accentColor,
-        unselectedItemColor: Colors.white,
-        currentIndex: _selectedIndexPages,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: "Categories",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            label: "Favourites",
-          ),
-        ],
-      ),
-      drawer: MainDrawer(),
     );
   }
 }
