@@ -7,6 +7,9 @@ import 'package:provider/provider.dart';
 
 class FiltersScreen extends StatefulWidget {
   static const routeName = '/filters';
+  final bool fromOnBoarding;
+
+  FiltersScreen({this.fromOnBoarding = false});
 
   @override
   _FiltersScreenState createState() => _FiltersScreenState();
@@ -46,23 +49,31 @@ class _FiltersScreenState extends State<FiltersScreen> {
       listen: true,
     ).filters;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(lan.getTexts('filters_appBar_title')),
-      ),
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(20),
-            child: Text(
-              lan.getTexts('filters_screen_title'),
-              style: Theme.of(context).textTheme.headline6,
-            ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: false,
+            title: widget.fromOnBoarding
+                ? null
+                : Text(lan.getTexts('filters_appBar_title')),
+            backgroundColor: widget.fromOnBoarding
+                ? Theme.of(context).canvasColor
+                : Theme.of(context).primaryColor,
+            elevation: widget.fromOnBoarding ? 0 : 5,
           ),
-          Expanded(
-            child: ListView(
-              children: [
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    lan.getTexts('filters_screen_title'),
+                    style: Theme.of(context).textTheme.headline6,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
                 buildSwitchListTile(
-                 lan.getTexts('Gluten-free'),
+                  lan.getTexts('Gluten-free'),
                   lan.getTexts('Gluten-free-sub'),
                   currentFilters['gluten'],
                   (newValue) {
@@ -104,7 +115,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                   },
                 ),
                 buildSwitchListTile(
-                 lan.getTexts('Vegan'),
+                  lan.getTexts('Vegan'),
                   lan.getTexts('Vegan-sub'),
                   currentFilters['vegan'],
                   (newValue) {
@@ -117,12 +128,13 @@ class _FiltersScreenState extends State<FiltersScreen> {
                     ).setFilters();
                   },
                 ),
+                SizedBox(height: widget.fromOnBoarding ? 80 : 0),
               ],
             ),
           ),
         ],
       ),
-      drawer: MainDrawer(),
+      drawer: widget.fromOnBoarding ? null : MainDrawer(),
     );
   }
 }

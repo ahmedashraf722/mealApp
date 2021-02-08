@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meal_app/providers/language_provider.dart';
 import 'package:meal_app/providers/theme_provider.dart';
 import 'package:meal_app/screens/filters_screen.dart';
+import 'package:meal_app/screens/tabs_screen.dart';
 import 'package:meal_app/screens/themes_screens.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +55,7 @@ class MainDrawer extends StatelessWidget {
             ),
             SizedBox(height: 15),
             _widgetListTile(Icons.restaurant, lan.getTexts('drawer_item1'), () {
-              Navigator.of(context).pushReplacementNamed('/');
+              Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
             }, context),
             _widgetListTile(Icons.settings, lan.getTexts('drawer_item2'), () {
               Navigator.of(context)

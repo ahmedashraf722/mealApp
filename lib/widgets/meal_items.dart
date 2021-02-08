@@ -36,6 +36,8 @@ class MealItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     var lan = Provider.of<LanguageProvider>(context, listen: true);
     TextStyle textStyle = TextStyle(
       fontWeight: FontWeight.bold,
@@ -62,11 +64,18 @@ class MealItem extends StatelessWidget {
                   ),
                   child: Hero(
                     tag: id,
-                    child: Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                      height: 200,
-                      width: double.infinity,
+                    child: InteractiveViewer(
+                      child: FadeInImage(
+                        width: double.infinity,
+                        height: isLandscape
+                            ? MediaQuery.of(context).size.height / 1.8
+                            : MediaQuery.of(context).size.height / 3,
+                        image: NetworkImage(imageUrl),
+                        placeholder: AssetImage(
+                          "assets/images/a2.png",
+                        ),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -91,7 +100,7 @@ class MealItem extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.only(top: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

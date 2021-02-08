@@ -7,14 +7,20 @@ import 'package:meal_app/screens/filters_screen.dart';
 import 'package:meal_app/screens/meal_details_screens.dart';
 import 'package:meal_app/screens/tabs_screen.dart';
 import 'package:meal_app/screens/themes_screens.dart';
+import 'package:meal_app/widgets/on_boarding_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
   /*WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.clear();*/
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  Widget homeScreen =
+      (prefs.getBool('watched') ?? false) ? TabsScreen() : OnBoardingScreen();
+
   runApp(
     MultiProvider(
       providers: [
@@ -28,12 +34,16 @@ void main() {
           create: (_) => LanguageProvider(),
         ),
       ],
-      child: MyApp(),
+      child: MyApp(homeScreen),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  final Widget mainScreen;
+
+  MyApp(this.mainScreen);
+
   @override
   Widget build(BuildContext context) {
     var tm = Provider.of<ThemeProvider>(context, listen: true).tm;
@@ -85,7 +95,8 @@ class MyApp extends StatelessWidget {
             ),
       ),
       routes: {
-        '/': (context) => TabsScreen(),
+        '/': (context) => mainScreen,
+        TabsScreen.routeName: (context) => TabsScreen(),
         CategoriesMealsScreens.routeName: (context) => CategoriesMealsScreens(),
         MealDetailsScreen.routeName: (context) => MealDetailsScreen(),
         FiltersScreen.routeName: (context) => FiltersScreen(),

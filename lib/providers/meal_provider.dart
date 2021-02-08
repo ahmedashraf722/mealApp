@@ -35,6 +35,7 @@ class MealProvider with ChangeNotifier {
       }
       return true;
     }).toList();
+
     List<Category> ac = [];
     listMeals.forEach((meal) {
       meal.categories.forEach((catId) {
@@ -69,6 +70,14 @@ class MealProvider with ChangeNotifier {
         favouriteMeals.add(dummyMeals.firstWhere((meal) => meal.id == mealId));
       }
     }
+    List<Meal> fm = [];
+    favouriteMeals.forEach((favMeals) {
+      listMeals.forEach((avMeals) {
+        if (favMeals.id == avMeals.id) fm.add(avMeals);
+      });
+    });
+    favouriteMeals = fm;
+
     notifyListeners();
   }
 

@@ -20,6 +20,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
       child: Text(
         text,
         style: Theme.of(context).textTheme.headline6,
+        textAlign: TextAlign.center,
       ),
     );
   }
@@ -55,6 +56,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
         MediaQuery.of(context).orientation == Orientation.landscape;
     List<String> listS = lan.getTexts('steps-$mealId') as List<String>;
     var listSteps = ListView.builder(
+      padding: EdgeInsets.all(0.0),
       itemBuilder: (context, index) {
         return Column(
           children: [
@@ -72,6 +74,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
     );
     List<String> listG = lan.getTexts('ingredients-$mealId') as List<String>;
     var gridIngredients = ListView.builder(
+      padding: EdgeInsets.all(0.0),
       itemBuilder: (context, index) {
         return Card(
           color: Theme.of(context).accentColor,
@@ -90,48 +93,60 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
     return Directionality(
       textDirection: lan.isEn ? TextDirection.ltr : TextDirection.rtl,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(lan.getTexts('meal-$mealId')),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: 300,
-                width: double.infinity,
-                child: Hero(
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              expandedHeight: 300,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(lan.getTexts('meal-$mealId')),
+                background: Hero(
                   tag: mealId,
-                  child:
-                      Image.network(selectedMeal.imageUrl, fit: BoxFit.cover),
+                  child: InteractiveViewer(
+                    child: FadeInImage(
+                      image: NetworkImage(
+                        selectedMeal.imageUrl,
+                      ),
+                      placeholder: AssetImage("assets/images/a2.png"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
-              if (isLandscape)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  if (isLandscape)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        buildSectionTitles(
-                            context, lan.getTexts('Ingredients')),
-                        buildContainer(gridIngredients),
+                        Column(
+                          children: [
+                            buildSectionTitles(
+                                context, lan.getTexts('Ingredients')),
+                            buildContainer(gridIngredients),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            buildSectionTitles(context, lan.getTexts('Steps')),
+                            buildContainer(listSteps),
+                          ],
+                        ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        buildSectionTitles(context, lan.getTexts('Steps')),
-                        buildContainer(listSteps),
-                      ],
-                    ),
-                  ],
-                ),
-              if (!isLandscape)
-                buildSectionTitles(context, lan.getTexts('Ingredients')),
-              if (!isLandscape) buildContainer(gridIngredients),
-              if (!isLandscape)
-                buildSectionTitles(context, lan.getTexts('Steps')),
-              if (!isLandscape) buildContainer(listSteps),
-            ],
-          ),
+                  if (!isLandscape)
+                    buildSectionTitles(context, lan.getTexts('Ingredients')),
+                  if (!isLandscape) buildContainer(gridIngredients),
+                  if (!isLandscape)
+                    buildSectionTitles(context, lan.getTexts('Steps')),
+                  if (!isLandscape) buildContainer(listSteps),
+                  SizedBox(height: 25),
+                ],
+              ),
+            ),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           elevation: 0,

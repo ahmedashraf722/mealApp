@@ -7,6 +7,9 @@ import 'package:provider/provider.dart';
 
 class ThemesScreen extends StatefulWidget {
   static const routeName = '/themes';
+  final bool fromOnBoarding;
+
+  ThemesScreen({this.fromOnBoarding = false});
 
   @override
   _ThemesScreenState createState() => _ThemesScreenState();
@@ -92,21 +95,29 @@ class _ThemesScreenState extends State<ThemesScreen> {
   Widget build(BuildContext context) {
     var lan = Provider.of<LanguageProvider>(context, listen: true);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(lan.getTexts('theme_appBar_title')),
-      ),
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(20),
-            child: Text(
-              lan.getTexts('theme_screen_title'),
-              style: Theme.of(context).textTheme.headline6,
-            ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: false,
+            title: widget.fromOnBoarding
+                ? null
+                : Text(lan.getTexts('theme_appBar_title')),
+            backgroundColor: widget.fromOnBoarding
+                ? Theme.of(context).canvasColor
+                : Theme.of(context).primaryColor,
+            elevation: widget.fromOnBoarding ? 0 : 5,
           ),
-          Expanded(
-            child: ListView(
-              children: [
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    lan.getTexts('theme_screen_title'),
+                    style: Theme.of(context).textTheme.headline6,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
                 Container(
                   padding: EdgeInsets.all(20),
                   child: Text(
@@ -134,12 +145,13 @@ class _ThemesScreenState extends State<ThemesScreen> {
                 ),
                 buildListTile(context, lan.getTexts('primary')),
                 buildListTile(context, lan.getTexts('accent')),
+                SizedBox(height: widget.fromOnBoarding ? 80 : 0),
               ],
             ),
           ),
         ],
       ),
-      drawer: MainDrawer(),
+      drawer: widget.fromOnBoarding ? null : MainDrawer(),
     );
   }
 }

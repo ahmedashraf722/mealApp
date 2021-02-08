@@ -8,6 +8,8 @@ import 'package:meal_app/screens/main_drawer_screen.dart';
 import 'package:provider/provider.dart';
 
 class TabsScreen extends StatefulWidget {
+  static const routeName = 'tab_screen';
+
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }
