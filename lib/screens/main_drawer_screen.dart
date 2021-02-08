@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meal_app/providers/language_provider.dart';
+import 'package:meal_app/providers/theme_provider.dart';
 import 'package:meal_app/screens/filters_screen.dart';
 import 'package:meal_app/screens/themes_screens.dart';
 import 'package:provider/provider.dart';
@@ -96,8 +97,10 @@ class MainDrawer extends StatelessWidget {
                           .changeLan(newValue);
                       Navigator.of(context).pop();
                     },
-                    activeColor: Colors.pink,
-                    inactiveThumbColor: Colors.pink,
+                    activeColor:
+                        Provider.of<ThemeProvider>(context).primaryColor,
+                    inactiveThumbColor:
+                        Provider.of<ThemeProvider>(context).primaryColor,
                   ),
                   Text(
                     lan.getTexts('drawer_switch_item1'),
